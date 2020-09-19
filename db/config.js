@@ -9,10 +9,6 @@ module.exports = () => {
         useUnifiedTopology: true,
       }
     )
-    .then(() =>
-      console.log("Connected to mongodb://localhost:27017/iCrowdTaskDB")
-    )
-    .catch(() =>
-      console.log("Failed to connect to mongodb://localhost:27017/iCrowdTaskDB")
-    );
+    .then(() => console.log("Connected to DB successfully"))
+    .catch(() => console.log("Failed to connect to DB"));
 };

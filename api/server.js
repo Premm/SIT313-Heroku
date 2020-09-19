@@ -9,21 +9,21 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 const appRouter = require("./routes")(app);
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: GOOGLE_CLIENT_ID,
-      clientSecret: GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:8080/auth/google/callback",
-      passReqToCallback: true,
-    },
-    function (request, accessToken, refreshToken, profile, done) {
-      User.findOrCreate({ googleId: profile.id }, function (err, user) {
-        return done(err, user);
-      });
-    }
-  )
-);
+// passport.use(
+//   new GoogleStrategy(
+//     {
+//       clientID: GOOGLE_CLIENT_ID,
+//       clientSecret: GOOGLE_CLIENT_SECRET,
+//       callbackURL: "http://localhost:8080/auth/google/callback",
+//       passReqToCallback: true,
+//     },
+//     function (request, accessToken, refreshToken, profile, done) {
+//       User.findOrCreate({ googleId: profile.id }, function (err, user) {
+//         return done(err, user);
+//       });
+//     }
+//   )
+// );
 
 app.use("/", appRouter);
 let port = process.env.PORT;
