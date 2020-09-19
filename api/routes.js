@@ -214,7 +214,7 @@ module.exports = (app) => {
       from: "Matt Benton", // This is ignored by Gmail
       to: email,
       subject: "Reset Password - SIT313",
-      text: `Here is the link required to reset your password. http://localhost:8000/reset-password?token=${token}`,
+      text: `Here is the link required to reset your password. https://aqueous-cove-09140.herokuapp.com/reset-password?token=${token}`,
     };
 
     // create reusable transporter object using the default SMTP transport
