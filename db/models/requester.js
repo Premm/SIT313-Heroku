@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcrypt");
-const { response } = require("express");
+const passportLocalMongoose = require("passport-local-mongoose");
+const findOrCreate = require("mongoose-findorcreate");
 
 const requesterSchema = new mongoose.Schema({
   countryOfResidence: {
     type: String,
-    required: true,
     trim: true,
   },
-  firstName: { type: String, required: true, trim: true },
-  lastName: { type: String, required: true, trim: true },
+  firstName: { type: String, trim: true },
+  lastName: { type: String, trim: true },
   email: {
     type: String,
     required: true,
@@ -24,7 +24,6 @@ const requesterSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     trim: true,
     validate(value) {
       if (value.length < 8) {
@@ -32,9 +31,9 @@ const requesterSchema = new mongoose.Schema({
       }
     },
   },
-  address: { type: String, required: true, trim: true },
-  city: { type: String, required: true, trim: true },
-  state: { type: String, required: true, trim: true },
+  address: { type: String, trim: true },
+  city: { type: String, trim: true },
+  state: { type: String, trim: true },
   postcode: { type: String, trim: true },
   phone: {
     type: String,
@@ -64,5 +63,11 @@ requesterSchema.pre("save", function (next) {
 requesterSchema.methods.comparePassword = function (checkPassword) {
   return bcrypt.compare(checkPassword, this.password);
 };
+
+requesterSchema.plugin(findOrCreate);
+requesterSchema.plugin(passportLocalMongoose, {
+  usernameField: "email",
+  passwordField: "password",
+});
 
 module.exports = mongoose.model("Requester", requesterSchema);

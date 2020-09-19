@@ -27,15 +27,15 @@ const submitRegistatrionForm = (e) => {
   }
   //take passwordConfirmation out of the payload, no need to send it. We dont want to include it in the save() request sent to mongo.
   const { passwordConfirmation, ...rest } = formData;
-  console.log("REST:", rest);
   $.ajax({
-    url: "/registration",
+    url: "/requesters",
     method: "POST",
     data: JSON.stringify(rest),
     contentType: "application/json; charset=utf-8",
     dataType: "json",
   })
     .then((response) => {
+      console.log(response);
       $.ajax({
         url: "/send-welcome-email",
         method: "POST",
@@ -48,7 +48,8 @@ const submitRegistatrionForm = (e) => {
       });
     })
     .catch((err) => {
-      window.location = "/registration/error";
+      console.log(err);
+      //window.location = "/registration/error";
     });
 };
 
@@ -92,7 +93,42 @@ const login = (e) => {
         $("#login-error-message").removeClass("d-none");
       }
     })
-    .catch((err) => console.log("ERROR: ", err));
+    .catch((err) => {
+      console.log("ERROR: ", err);
+      $("#login-error-message").removeClass("d-none");
+    });
+};
+
+const sendForgotPasswordEmail = (e) => {
+  e.preventDefault();
+  const { email } = formData;
+  console.log(email);
+  // const token = jwt.encode(email);
+
+  $.ajax({
+    url: "/send-email",
+    method: "POST",
+    data: JSON.stringify({ email: email }),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+  });
+};
+
+const updatePassword = (e) => {
+  e.preventDefault();
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get("token");
+  console.log("TOKEN: ", token);
+
+  $.ajax({
+    url: "/set-password",
+    method: "POST",
+    data: JSON.stringify({ token: token, password: formData.password }),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+  })
+    .then(() => (window.location.href = "/login"))
+    .catch((err) => console.log("Could not decode the token.", err));
 };
 
 $(window).on("load", () => {
